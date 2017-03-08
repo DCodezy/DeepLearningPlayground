@@ -9,6 +9,7 @@ from __future__ import print_function
 import numpy as np
 import itertools
 import psutil
+import pickle
 np.random.seed(327)
 
 X_filename = 'bigtext_X' # file to save X to
@@ -36,8 +37,8 @@ char2int_dic = dict((c,i) for (i,c) in enumerate(set(raw_data)))
 int2char_dic = dict((i,c) for (i,c) in enumerate(set(raw_data)))
 int_data = [char2int_dic[i] for i in raw_data]
 
-save_obj(char2int, 'char2int')
-save_obj(int2char, 'int2char')
+save_obj(char2int_dic, 'char2int')
+save_obj(int2char_dic, 'int2char')
 
 '''
 # Create sequences by moving size of $window_size
