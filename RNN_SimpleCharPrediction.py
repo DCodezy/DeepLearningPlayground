@@ -5,6 +5,7 @@ This is just meant to be a fun little exercise
 from __future__ import print_function
 import numpy as np
 import itertools
+import psutil
 np.random.seed(327)  # for reproducibility
 
 # Import data from data_dir, format to X_train, y_trian, etc.
@@ -38,9 +39,24 @@ print("Unique Characters: " + str(len(unique_chars)))
 print("Sequence in len: " + str(len(seq_in)))
 print(seq_in[0])
 print("exp_out len: " + str(len(exp_out)))
+print('-' * 15)
+print("Memory used: " + str(psutil.virtual_memory()[2]))
 
 # Vectorize sequences and from to 3d array (n_samples, time_step, input_dim)
 # Note: input_dim is to represent the vectorized form of input
-X = np.zeros(len(seq_in), window_size, )
+X = np.zeros((len(seq_in), window_size, len(unique_chars)), dtype=np.bool)
+y = np.zeros((len(seq_in), len(unique_chars)), dtype=np.bool)
+for i, seq in enumerate(seq_in):
+    for j, char_as_int in enumerate(seq):
+        X[i, j, char_as_int] = 1
+        y[i, exp_out[i]] = 1
+
+print("X: ")
+print(X)
+print("y: ")
+print(y)
+print('-' * 15)
+print("Memory used: " + str(psutil.virtual_memory()[2]))
+
 
 # Create and compile Keras net
