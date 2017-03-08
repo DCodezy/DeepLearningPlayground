@@ -8,6 +8,7 @@ SimpleCharPred_model.py -> Trains model using formatted data
 from __future__ import print_function
 import numpy as np
 import psutil
+import pickle
 import os
 np.random.seed(327)
 
