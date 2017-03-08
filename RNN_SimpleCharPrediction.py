@@ -20,9 +20,9 @@ with open('data/big.txt') as f:
         )
     )
 
-# Translate to
-unique_chars = sorted(list(set(raw_data)))
+# Remote unwanted chars and translate chars to ints
 raw_data = [c for c in raw_data if c not in remove_chars]
+unique_chars = sorted(list(set(raw_data)))
 char2int_dic = dict((c,i) for (i,c) in enumerate(set(raw_data)))
 int2char_dic = dict((i,c) for (i,c) in enumerate(set(raw_data)))
 int_data = [char2int_dic[i] for i in raw_data]
@@ -41,6 +41,6 @@ print("exp_out len: " + str(len(exp_out)))
 
 # Vectorize sequences and from to 3d array (n_samples, time_step, input_dim)
 # Note: input_dim is to represent the vectorized form of input
-X = np.zeroes(len(seq_in), window_size, )
+X = np.zeros(len(seq_in), window_size, )
 
 # Create and compile Keras net
