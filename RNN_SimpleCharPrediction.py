@@ -9,6 +9,7 @@ from __future__ import print_function
 import numpy as np
 import itertools
 import psutil
+
 np.random.seed(327)
 
 X_filename = 'bigtext_X' # file to save X to
@@ -39,7 +40,6 @@ int_data = [char2int_dic[i] for i in raw_data]
 save_obj(char2int, 'char2int')
 save_obj(int2char, 'int2char')
 
-'''
 # Create sequences by moving size of $window_size
 seq_in = []
 exp_out = []
@@ -72,4 +72,4 @@ print("Memory used: " + str(psutil.virtual_memory()[2]))
 
 # Save arrays
 np.save(X_filename, X)
-np.save(y_filename, y)'''
+np.save(y_filename, y)
