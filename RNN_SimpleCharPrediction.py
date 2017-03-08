@@ -8,7 +8,8 @@ import itertools
 import psutil
 np.random.seed(327)  # for reproducibility
 
-# Import data from data_dir, format to X_train, y_trian, etc.
+X_filename = 'bigtext_X' # file to save X to
+y_filename = 'bigtext_y' # file to save y to
 remove_chars = '\t=@[]<>^_|~%*'
 window_size = 25
 
@@ -58,5 +59,6 @@ print(y)
 print('-' * 15)
 print("Memory used: " + str(psutil.virtual_memory()[2]))
 
-
-# Create and compile Keras net
+# Save arrays
+np.save(X_filename, X)
+np.save(y_filename, y)
