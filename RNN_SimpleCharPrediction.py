@@ -10,7 +10,7 @@ np.random.seed(327)  # for reproducibility
 from Keras import sequence
 
 # Import data from data_dir, format to X_train, y_trian, etc.
-remove_chars = '\t=@[]<>^_|~%*
+remove_chars = '\t=@[]<>^_|~%*'
 window_size = 25
 
 with open('data/big.txt') as f:
