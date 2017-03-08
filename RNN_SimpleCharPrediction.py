@@ -1,17 +1,24 @@
 '''
 Apply a simple RNN to predict various lengths of character sequences
 This is just meant to be a fun little exercise
+
+RNN_SimpleCharPrediction.py -> Formats data and saves them to files
+SimpleCharPred_model.py -> Trains model using formatted data
 '''
 from __future__ import print_function
 import numpy as np
 import itertools
 import psutil
-np.random.seed(327)  # for reproducibility
+np.random.seed(327)
 
 X_filename = 'bigtext_X' # file to save X to
 y_filename = 'bigtext_y' # file to save y to
 remove_chars = '\t=@[]<>^_|~%*'
 window_size = 25
+
+def save_obj(obj, name ):
+    with open('obj/'+ name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 with open('data/big.txt') as f:
     raw_data = np.array(
@@ -29,6 +36,10 @@ char2int_dic = dict((c,i) for (i,c) in enumerate(set(raw_data)))
 int2char_dic = dict((i,c) for (i,c) in enumerate(set(raw_data)))
 int_data = [char2int_dic[i] for i in raw_data]
 
+save_obj(char2int, 'char2int')
+save_obj(int2char, 'int2char')
+
+'''
 # Create sequences by moving size of $window_size
 seq_in = []
 exp_out = []
@@ -61,4 +72,4 @@ print("Memory used: " + str(psutil.virtual_memory()[2]))
 
 # Save arrays
 np.save(X_filename, X)
-np.save(y_filename, y)
+np.save(y_filename, y)'''
