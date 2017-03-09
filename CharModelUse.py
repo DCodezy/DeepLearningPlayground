@@ -60,7 +60,7 @@ for (i, c) in enumerate(sentence_ints):
 
 output_sentence = SENTENCE_SEED
 
-for i in END_SENTECE_LENGTH:
+for i in range(0, END_SENTECE_LENGTH):
     pred_logprob = loaded_model.predict(model_seed_input, verbose=0)[0]
     pred_int = np.argmax(pred_logprob)
 
