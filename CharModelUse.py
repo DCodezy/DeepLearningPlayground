@@ -8,11 +8,12 @@ CharModelUse.py -> Use a trained model to generate new text
 '''
 from __future__ import print_function
 import numpy as np
+import pickle
 import psutil
 import os
 np.random.seed(327)
 
-from keras.models import Sequential
+from keras.models import Sequential, model_from_json
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 from keras.optimizers import RMSprop
@@ -50,14 +51,18 @@ print("Loaded model from disk")
 # Convert input string into usuable sequences
 model_seed_input = np.zeros((1, len(SENTENCE_SEED), 53), dtype=np.bool)
 
-sentence_ints = [char2int[c] for c in list(SENTENCE_SEED)]
+remove_chars = '\t=@[]<>^_|~%*'
+mod_sentence_seed = list(SENTENCE_SEED.lower())
+sentence_ints = [char2int_dic[c] for c in mod_sentence_seed 
+						if c not in remove_chars]
 for (i, c) in enumerate(sentence_ints):
     model_seed_input[0, i, c] = 1
 
-pred = loaded_model.predict(model_seed_input, verbose=0)
+pred = loaded_model.predict(model_seed_input, verbose=0)[0]
 print("Printing pred:")
 print(pred)
 print("Done")
+print(int2char_dic[np.argmax(pred)])
 '''
 for i in END_SENTECE_LENGTH:
     pred = loaded_model.predict(model_seed_input, verbose=0)
