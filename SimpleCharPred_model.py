@@ -9,6 +9,7 @@ CharModelUse.py -> Use a trained model to generate new text
 from __future__ import print_function
 import numpy as np
 import psutil
+import pickle
 import os
 np.random.seed(327)
 
@@ -18,8 +19,8 @@ from keras.layers import LSTM
 from keras.optimizers import RMSprop
 from keras.utils.data_utils import get_file
 
-X_filename = 'bigtext_X' # file to get X from
-y_filename = 'bigtext_y' # file to get y from
+X_filename = 'bigtext_X.npy' # file to get X from
+y_filename = 'bigtext_y.npy' # file to get y from
 window_size = 25
 
 def load_obj(name ):
