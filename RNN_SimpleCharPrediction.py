@@ -4,6 +4,7 @@ This is just meant to be a fun little exercise
 
 RNN_SimpleCharPrediction.py -> Formats data and saves them to files
 SimpleCharPred_model.py -> Trains model using formatted data
+CharModelUse.py -> Use a trained model to generate new text
 '''
 from __future__ import print_function
 import numpy as np
@@ -31,6 +32,7 @@ with open('data/big.txt') as f:
     )
 
 # Remote unwanted chars and translate chars to ints
+print("Generating dictionaries...")
 raw_data = [c for c in raw_data if c not in remove_chars]
 unique_chars = sorted(list(set(raw_data)))
 char2int_dic = dict((c,i) for (i,c) in enumerate(set(raw_data)))
@@ -39,6 +41,7 @@ int_data = [char2int_dic[i] for i in raw_data]
 
 save_obj(char2int_dic, 'char2int')
 save_obj(int2char_dic, 'int2char')
+print("Saved dictionaries")
 
 # Create sequences by moving size of $window_size
 seq_in = []

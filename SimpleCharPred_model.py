@@ -4,6 +4,7 @@ This is just meant to be a fun little exercise
 
 RNN_SimpleCharPrediction.py -> Formats data and saves them to files
 SimpleCharPred_model.py -> Trains model using formatted data
+CharModelUse.py -> Use a trained model to generate new text
 '''
 from __future__ import print_function
 import numpy as np
