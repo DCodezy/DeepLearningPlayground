@@ -2,9 +2,9 @@
 Apply a simple RNN to predict various lengths of character sequences
 This is just meant to be a fun little exercise
 
-RNN_SimpleCharPrediction.py -> Formats data and saves them to files
-SimpleCharPred_model.py -> Trains model using formatted data
-CharModelUse.py -> Use a trained model to generate new text
+charRNN_preprocessing.py -> Formats data and saves them to files
+charRNN_training.py -> Trains model using formatted data
+charRNN_predicting.py -> Use a trained model to generate new text
 '''
 from __future__ import print_function
 import numpy as np
@@ -13,11 +13,86 @@ import psutil
 import pickle
 np.random.seed(327)
 
-X_filename = 'bigtext_X' # file to save X to
-y_filename = 'bigtext_y' # file to save y to
-remove_chars = '\t=@[]<>^_|~%*'
-window_size = 25
+remove_chars = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '\t',
+    '=',
+    '@',
+    '[',
+    ']',
+    '(',
+    ')',
+    '<',
+    '>',
+    '^',
+    '_',
+    '|',
+    '~',
+    '%',
+    '*',
+    '“',
+    '”',
+    ',',
+    'à',
+    'á',
+    'â',
+    'ä',
+    'æ',
+    'ç',
+    'è',
+    'é',
+    'ê',
+    'ë',
+    'í',
+    'î',
+    'ï',
+    'ó',
+    'ô',
+    'ö',
+    'ú',
+    'ü',
+    'ý',
+    'œ',
+    '—',
+    '‘',
+    '’',
+    '“',
+    '”',
+    '\ufeff',
+    '"',
+    ':',
+    ';',
+    '/',
+    '-'
+]
 
+with open('data/war_and_peace.txt', encoding='utf8') as file:
+    raw_string = [(line.strip() + ' ') for line in file]
+raw_string = ''.join(raw_string)
+
+chars = [c for c in list(raw_string) if c not in remove_chars]
+
+temp_string = ''.join(chars)
+temp_string = temp_string.replace('  ', ' ')
+temp_string = temp_string.lower()
+temp_string = temp_string.replace('!', '.')
+temp_string = temp_string.replace('?', '.')
+
+with open('tmp/war_and_peace.txt', 'w') as file:
+    file.write(temp_string)
+
+
+# window_size = 25
+'''
 def save_obj(obj, name ):
     with open('obj/'+ name + '.pkl', 'wb') as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
@@ -76,3 +151,4 @@ print("Memory used: " + str(psutil.virtual_memory()[2]))
 # Save arrays
 np.save(X_filename, X)
 np.save(y_filename, y)
+'''
