@@ -69,7 +69,7 @@ model.add(Activation('softmax'))
 rms = RMSprop()
 model.compile(loss='categorical_crossentropy', optimizer=rms)
 
-checkpointer = ModelCheckpoint(filepath='/models/WaP_model1_.{epoch:02d}.hdf5')
+checkpointer = ModelCheckpoint(filepath='models/WaP_model1.{epoch:02d}.hdf5')
 
 # Training
 model.fit(X, y, batch_size=128, nb_epoch=30, callbacks=[checkpointer])
