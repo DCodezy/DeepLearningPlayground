@@ -27,7 +27,7 @@ with open('data/war_and_peace.txt') as f:
     raw_data = ''.join(raw_data)
 
 print('Generating dictionaries...')
-raw_data = [c for c in raw_data if c not in remove_chars]
+raw_data = [c for c in raw_data]
 unique_chars = sorted(list(set(raw_data)))
 num_unique = len(unique_chars)
 char2int_dic = dict((c,i) for (i,c) in enumerate(set(raw_data)))
