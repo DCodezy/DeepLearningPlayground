@@ -25,7 +25,7 @@ def load_obj(name ):
 
 SEED_LENGTH = 25
 END_SENTECE_LENGTH  = 400
-SENTENCE_SEED = "This is the beginning of " # Should be length seed_length
+SENTENCE_SEED = "then there was only one w" # Should be length seed_length
 
 if len(SENTENCE_SEED) != SEED_LENGTH:
     print("Error: incorrected sentecen seed length")
