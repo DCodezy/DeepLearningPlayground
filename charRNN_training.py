@@ -37,7 +37,7 @@ print('-' * 20)
 print('Details')
 print('Total characters: ' + str(len(raw_data)))
 print('# unique characters: ' + str(num_unique))
-print('Memory used: ' + str(psutil.virtual_memory()[2]))
+print('Memory used: ' + str(psutil.virtual_memory()[2]) + '%')
 print('-' * 20)
 
 print('Creating sequences...')
@@ -46,7 +46,7 @@ exp_out = []
 for i in range(0, len(int_data) - WINDOW_SIZE):
     seq_in.append(int_data[i:(i + WINDOW_SIZE)])
     exp_out.append(int_data[i + WINDOW_SIZE])
-print('Memory used: ' + str(psutil.virtual_memory()[2]))
+print('Memory used: ' + str(psutil.virtual_memory()[2]) + '%')
 
 # Vectorize sequences and from to 3d array (n_samples, time_step, input_dim)
 # Note: input_dim is to represent the vectorized form of input
@@ -65,7 +65,9 @@ model = Sequential()
 model.add(LSTM(128, input_shape=(WINDOW_SIZE, num_unique)))
 model.add(Dense(num_unique))
 model.add(Activation('softmax'))
-model.compile(loss='categorical_crossentropy')
+
+rms = RMSprop()
+model.compile(loss='categorical_crossentropy', optimizer=rms)
 
 checkpointer = ModelCheckpoint(filepath='/models/WaP_model1_.{epoch:02d}.hdf5')
 
