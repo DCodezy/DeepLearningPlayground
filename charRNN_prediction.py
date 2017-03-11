@@ -2,9 +2,9 @@
 Apply a simple RNN to predict various lengths of character sequences
 This is just meant to be a fun little exercise
 
-RNN_SimpleCharPrediction.py -> Formats data and saves them to files
-SimpleCharPred_model.py -> Trains model using formatted data
-CharModelUse.py -> Use a trained model to generate new text
+charRNN_preprocessing.py -> Formats data and saves them to files
+charRNN_training.py -> Trains model using formatted data
+charRNN_prediction.py -> Use a trained model to generate new text
 '''
 from __future__ import print_function
 import numpy as np
@@ -25,7 +25,13 @@ def load_obj(name ):
 
 SEED_LENGTH = 20
 END_SENTECE_LENGTH  = 400
-SENTENCE_SEED = "there once was a " # Should be length seed_length
+SENTENCE_SEED = [
+    "then there was only ",
+    "thats an interesting",
+    "how can you even thi",
+    "apple bottom jeans d",
+    "for everything that "
+]
 
 if len(SENTENCE_SEED) != SEED_LENGTH:
     print("Error: incorrected sentecen seed length")
@@ -60,29 +66,32 @@ loaded_model.load_weights("WaP_model1.h5")
 print("Loaded model from disk")
 
 # Convert input string into usuable sequences
-model_seed_input = np.zeros((1, len(SENTENCE_SEED), num_unique), dtype=np.bool)
+sentence_ints = []
+for sent in SENTENCE_SEED:
+    sentence_ints.append([char2int_dic[c] for c in sent])
 
-remove_chars = '\t=@[]<>^_|~%*'
-mod_sentence_seed = list(SENTENCE_SEED.lower())
-sentence_ints = [char2int_dic[c] for c in mod_sentence_seed
-						if c not in remove_chars]
-for (i, c) in enumerate(sentence_ints):
-    model_seed_input[0, i, c] = 1
+model_seed_input = np.zeros(
+    (len(SENTENCE_SEED), len(SEED_LENGTH), num_unique), dtype=np.bool
+)
+for (j, sent) in enumerate(sentence_ints):
+    for (i, c) in enumerate(sent):
+        model_seed_input[j, i, c] = 1
 
 output_sentence = SENTENCE_SEED
 
 for i in range(0, END_SENTECE_LENGTH):
-    pred_logprob = loaded_model.predict(model_seed_input, verbose=0)[0]
-    pred_int = np.argmax(pred_logprob)
-
-    output_sentence += int2char_dic[pred_int]
+    pred_logprob = loaded_model.predict(model_seed_input, verbose=0)
+    new_input = np.zeros((len(SENTENCE_SEED), 1, num_unique), dtype=np.bool)
+    for (j, pred) in enumerate(pred_logprob):
+        pred_int = np.argmax(pred)
+        new_input[j, 0, pred_int] = 1
+        output_sentence[j] += int2char_dic[pred_int]
 
     # Shift model input to include new character
     model_seed_input = np.roll(model_seed_input, shift=-1, axis=1)
-    model_seed_input[0, SEED_LENGTH - 1] = np.zeros((num_unique), dtype=np.bool)
-    model_seed_input[0, SEED_LENGTH - 1, pred_int] = 1
+    model_seed_input[:, SEED_LENGTH - 1, :] = new_input
 
-print("Input: ")
-print(SENTENCE_SEED)
-print("Output: ")
-print(output_sentence)
+for (i, sent) in SENTENCE_SEED:
+    print('-' * 25)
+    print("Input sentence: " + sent)
+    print("Output sentence: " + output_sentence[i])
