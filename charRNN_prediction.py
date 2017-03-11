@@ -72,7 +72,7 @@ for sent in SENTENCE_SEED:
     sentence_ints.append([char2int_dic[c] for c in sent])
 
 model_seed_input = np.zeros(
-    (len(SENTENCE_SEED), len(SEED_LENGTH), num_unique), dtype=np.bool
+    (len(SENTENCE_SEED), SEED_LENGTH, num_unique), dtype=np.bool
 )
 for (j, sent) in enumerate(sentence_ints):
     for (i, c) in enumerate(sent):
@@ -82,17 +82,17 @@ output_sentence = SENTENCE_SEED
 
 for i in range(0, END_SENTECE_LENGTH):
     pred_logprob = loaded_model.predict(model_seed_input, verbose=0)
-    new_input = np.zeros((len(SENTENCE_SEED), 1, num_unique), dtype=np.bool)
+    new_input = np.zeros((len(SENTENCE_SEED), num_unique), dtype=np.bool)
     for (j, pred) in enumerate(pred_logprob):
         pred_int = np.argmax(pred)
-        new_input[j, 0, pred_int] = 1
+        new_input[j, pred_int] = 1
         output_sentence[j] += int2char_dic[pred_int]
 
     # Shift model input to include new character
     model_seed_input = np.roll(model_seed_input, shift=-1, axis=1)
     model_seed_input[:, SEED_LENGTH - 1, :] = new_input
 
-for (i, sent) in SENTENCE_SEED:
+for (i, sent) in enumerate(SENTENCE_SEED):
     print('-' * 25)
     print("Input sentence: " + sent)
     print("Output sentence: " + output_sentence[i])
