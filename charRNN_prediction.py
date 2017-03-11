@@ -13,7 +13,7 @@ import psutil
 import os
 np.random.seed(10)
 
-from keras.models import Sequential, model_from_json
+from keras.models import Sequential, model_from_json, load_model
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 from keras.optimizers import RMSprop
@@ -56,14 +56,15 @@ print('Total characters: ' + str(len(raw_data)))
 print('# unique characters: ' + str(num_unique))
 print('-' * 20)
 
-print("Loading model")
-json_file = open('WaP_model1.json', 'r')
+print("Loading model...")
+'''json_file = open('WaP_model1.json', 'r')
 loaded_model_json = json_file.read()
 json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 # load weights into new model
 loaded_model.load_weights("WaP_model1.h5")
-print("Loaded model from disk")
+print("Loaded model from disk")'''
+loaded_model = load_model('models/WaP_model1.20.hdf5')
 
 # Convert input string into usuable sequences
 sentence_ints = []
@@ -71,7 +72,7 @@ for sent in SENTENCE_SEED:
     sentence_ints.append([char2int_dic[c] for c in sent])
 
 model_seed_input = np.zeros(
-    (len(SENTENCE_SEED), SEED_LENGTH, num_unique), dtype=np.bool
+    (len(SENTENCE_SEED), len(SEED_LENGTH), num_unique), dtype=np.bool
 )
 for (j, sent) in enumerate(sentence_ints):
     for (i, c) in enumerate(sent):
@@ -81,17 +82,17 @@ output_sentence = SENTENCE_SEED
 
 for i in range(0, END_SENTECE_LENGTH):
     pred_logprob = loaded_model.predict(model_seed_input, verbose=0)
-    new_input = np.zeros((len(SENTENCE_SEED), num_unique), dtype=np.bool)
+    new_input = np.zeros((len(SENTENCE_SEED), 1, num_unique), dtype=np.bool)
     for (j, pred) in enumerate(pred_logprob):
         pred_int = np.argmax(pred)
-        new_input[j, pred_int] = 1
+        new_input[j, 0, pred_int] = 1
         output_sentence[j] += int2char_dic[pred_int]
 
     # Shift model input to include new character
     model_seed_input = np.roll(model_seed_input, shift=-1, axis=1)
     model_seed_input[:, SEED_LENGTH - 1, :] = new_input
 
-for (i, sent) in enumerate(SENTENCE_SEED):
+for (i, sent) in SENTENCE_SEED:
     print('-' * 25)
     print("Input sentence: " + sent)
     print("Output sentence: " + output_sentence[i])
