@@ -98,7 +98,7 @@ for i in range(0, END_SENTECE_LENGTH):
     for (j, pred) in enumerate(pred_logprob):
         pred_int = 0
         if USE_PROB_OUTPUT:
-            pred_int = generate_car(pred, N_TOP_RANDOM)
+            pred_int = generate_char(pred, N_TOP_RANDOM)
         else:
             pred_int = np.argmax(pred)
         new_input[j, pred_int] = 1
