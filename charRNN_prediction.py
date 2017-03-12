@@ -19,11 +19,23 @@ from keras.layers import LSTM
 from keras.optimizers import RMSprop
 from keras.utils.data_utils import get_file
 
+# Given probablity distribution, generate a non-uniform random index
+# prob_dist - full 1D array of probabilities
+# top_n - number of top probability characters to consider
+def generate_char(prob_dist, top_n):
+    consider_probs_index = np.argsort(prob_dist)[-top_n:]
+    consider_probs = prob_dist[consider_probs_index]
+    total_prob = np.sum(consider_probs)
+    consider_probs = consider_probs / total_prob
+    return np.random.choice(consider_probs_index, p=consider_probs)
+
 def load_obj(name ):
     with open('obj/' + name + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 SEED_LENGTH = 20
+USE_PROB_OUTPUT = True
+N_TOP_RANDOM = 3
 END_SENTECE_LENGTH  = 400
 SENTENCE_SEED = [
     "then there was only ",
@@ -84,7 +96,11 @@ for i in range(0, END_SENTECE_LENGTH):
     pred_logprob = loaded_model.predict(model_seed_input, verbose=0)
     new_input = np.zeros((len(SENTENCE_SEED), num_unique), dtype=np.bool)
     for (j, pred) in enumerate(pred_logprob):
-        pred_int = np.argmax(pred)
+        pred_int = 0
+        if USE_PROB_OUTPUT:
+            pred_int = generate_car(pred, N_TOP_RANDOM)
+        else:
+            pred_int = np.argmax(pred)
         new_input[j, pred_int] = 1
         output_sentence[j] += int2char_dic[pred_int]
 
